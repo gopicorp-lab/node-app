@@ -3,5 +3,8 @@
     "start": "node server.js",
     "test": "echo \"No tests configured\"",
     "build": "echo \"Build completed\""
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
