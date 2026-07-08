@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout source
         uses: actions/checkout@v4
 
@@ -24,17 +25,12 @@ jobs:
         run: npm install
 
       - name: Validate application
-        #run: node server.js &
-         #    APP_PID=$!
-          #   sleep 5
-          #   curl -f http://localhost:3000
-          #   kill $APP_PID
         run: |
-                 node server.js &
-                 APP_PID=$!
-                 sleep 5
-                 curl -f http://localhost:3000
-                 kill $APP_PID
+          node server.js &
+          APP_PID=$!
+          sleep 5
+          curl -f http://localhost:3000
+          kill $APP_PID
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -52,3 +48,16 @@ jobs:
       - name: Push Docker image
         run: |
           docker push gopicorp/node-app:latest
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Test Kubernetes connection
+        run: |
+          kubectl get nodes
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f kubernetes/
