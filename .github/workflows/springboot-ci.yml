@@ -121,8 +121,8 @@ jobs:
     name: Docker Push
     runs-on: ubuntu-latest
 
-    #needs:
-      #- image-scan
+    needs:
+      - image-scan
 
     steps:
 
