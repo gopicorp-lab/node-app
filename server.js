@@ -6,7 +6,7 @@ let memory = [];
 
 app.get("/", (req, res) => {
   // allocate ~10MB each request
-  memory.push(Buffer.alloc(10 * 10 * 10));
+  memory.push(Buffer.alloc(10 * 12 * 10));
 
   res.send("Memory allocation test");
 });
