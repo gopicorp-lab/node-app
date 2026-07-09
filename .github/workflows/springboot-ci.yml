@@ -139,7 +139,7 @@ jobs:
       - name: Load Docker Image
         run: |
           docker load \
-          -i spring-boot-image.tar
+          -i spring-boot-app.tar
 
 
       - name: Docker Login
