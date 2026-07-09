@@ -22,16 +22,33 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Validate application
+      # ------------------------
+      # Unit Tests
+      # ------------------------
+      - name: Run Unit Tests
+        run: npm run test:unit
+
+      # ------------------------
+      # Integration Tests
+      # ------------------------
+      - name: Start application
         run: |
           node server.js &
-          APP_PID=$!
+          echo $! > app.pid
           sleep 5
-          curl -f http://localhost:3000
-          kill $APP_PID
+
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      - name: Stop application
+        if: always()
+        run: |
+          kill $(cat app.pid) || true
 
 
-
+      # ------------------------
+      # Docker Build & Push
+      # ------------------------
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
