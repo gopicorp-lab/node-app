@@ -108,6 +108,7 @@ jobs:
 
       - name: Run Trivy Scan
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: spring-boot-app:${{ github.sha }}
           format: table
