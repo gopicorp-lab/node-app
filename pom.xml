@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
@@ -8,17 +9,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.0</version>
+        <version>3.3.5</version>
         <relativePath/>
     </parent>
 
-
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>spring-boot-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>demo</name>
-
+    <name>spring-boot-app</name>
+    <description>Spring Boot Docker CI/CD Example</description>
 
     <properties>
         <java.version>17</java.version>
@@ -27,13 +27,14 @@
 
     <dependencies>
 
+        <!-- REST API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
 
-        <!-- Testing -->
+        <!-- Unit Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -44,17 +45,15 @@
 
 
     <build>
-
         <plugins>
 
+            <!-- Creates executable Spring Boot JAR -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
         </plugins>
-
     </build>
-
 
 </project>
