@@ -8,24 +8,19 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout source
         uses: actions/checkout@v4
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-
       - name: Install dependencies
         run: npm install
-
 
       - name: Validate application
         run: |
@@ -35,6 +30,22 @@ jobs:
           curl -f http://localhost:3000
           kill $APP_PID
 
+      - name: Check Tailscale secrets
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.TS_OAUTH_CLIENT_ID }}" ]; then
+            echo "TS_OAUTH_CLIENT_ID is EMPTY"
+            exit 1
+          else
+            echo "TS_OAUTH_CLIENT_ID exists"
+          fi
+
+          if [ -z "${{ secrets.TS_OAUTH_SECRET }}" ]; then
+            echo "TS_OAUTH_SECRET is EMPTY"
+            exit 1
+          else
+            echo "TS_OAUTH_SECRET exists"
+          fi
 
       # Connect GitHub runner to your Tailscale network
       - name: Connect to Tailscale
@@ -43,10 +54,8 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
 
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -54,18 +63,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-
       - name: Build Docker image
         run: |
           docker build -t gopicorp/node-app:${{ github.sha }} .
           docker tag gopicorp/node-app:${{ github.sha }} gopicorp/node-app:latest
 
-
       - name: Push Docker image
         run: |
           docker push gopicorp/node-app:${{ github.sha }}
           docker push gopicorp/node-app:latest
-
 
       # Configure kubeconfig
       - name: Configure kubeconfig
@@ -73,22 +79,18 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > ~/.kube/config
 
-
       - name: Test Kubernetes connection
         run: |
           kubectl get nodes
-
 
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f kubernetes/
 
-
       - name: Update Kubernetes image
         run: |
           kubectl set image deployment/node-app \
-          node-app=gopicorp/node-app:${{ github.sha }}
-
+            node-app=gopicorp/node-app:${{ github.sha }}
 
       - name: Verify deployment
         run: |
