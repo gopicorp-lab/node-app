@@ -1,33 +1,41 @@
-name: Java Maven CI
+name: Spring Boot Parallel CI
 
 on:
   push:
     branches:
-      - java-jacoco-unittest
+      - main
 
   pull_request:
     branches:
       - main
 
+
 jobs:
-  build:
+
+  # Job 1
+  unit-test:
+
+    name: Build and Unit Test
 
     runs-on: ubuntu-latest
 
     steps:
 
-      - name: Checkout source
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
 
-      - name: Build and Run Tests
+
+      - name: Run Maven Tests
         run: mvn clean verify
+
 
       - name: Upload JaCoCo Report
         if: always()
@@ -35,3 +43,34 @@ jobs:
         with:
           name: jacoco-report
           path: target/site/jacoco/
+
+
+
+  # Job 2
+  sonarqube-analysis:
+
+    name: SonarQube Code Analysis
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+
+      - name: Run SonarQube Scan
+        run: |
+          mvn sonar:sonar \
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
