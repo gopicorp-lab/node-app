@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'node-app-1',
-                    url: 'https://github.com/company/my-app.git'
+                    url: 'https://github.com/gopicorp-lab/node-app.git'
             }
         }
 
