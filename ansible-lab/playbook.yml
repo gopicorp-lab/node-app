@@ -1,0 +1,28 @@
+---
+- name: My First Ansible Playbook
+  hosts: webservers
+  gather_facts: yes
+  become: yes
+
+  tasks:
+
+    - name: Display the hostname
+      command: hostname
+      register: hostname_output
+
+    - name: Print hostname
+      debug:
+        msg: "Hostname is {{ hostname_output.stdout }}"
+
+    - name: Create a directory
+      file:
+        path: /tmp/ansible-demo
+        state: directory
+        mode: '0755'
+
+    - name: Create a text file
+      copy:
+        dest: /tmp/ansible-demo/message.txt
+        content: |
+          Hello from Ansible!
+          This file was created automatically.
