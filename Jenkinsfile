@@ -24,7 +24,7 @@ pipeline {
 
             steps {
 
-                sh 'npm install'
+                bat 'npm install'
 
             }
         }
@@ -34,7 +34,7 @@ pipeline {
 
             steps {
 
-                sh 'npm test'
+                bat 'npm test'
 
             }
         }
@@ -44,7 +44,7 @@ pipeline {
 
             steps {
 
-                sh '''
+                bat '''
                 docker build \
                 -t ${IMAGE_NAME}:${IMAGE_TAG} .
                 '''
